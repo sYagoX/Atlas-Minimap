@@ -11,22 +11,35 @@
     .header { display: flex; align-items: center; gap: 11px; margin-bottom: 20px; }
     .logo { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 9px; background: #253650; color: #71d5b1; }
     .logo svg { width: 20px; height: 20px; }
-    .name { font-size: 18px; font-weight: bold; }
-    .subtitle { margin-top: 6px; font-size: 12px; color: #a8caff; }
+    .name { font-size: 22px; font-weight: bold; }
+    .subtitle { margin-top: 6px; font-size: 15px; color: #a8caff; }
     hr { margin: 0; border: 0; border-top: 1px solid #344155; }
     .intro { padding: 32px 8px 24px; text-align: center; }
-    .version-tag { display: inline-block; padding: 4px 9px; border-radius: 20px; background: #063e2a; color: #00d66a; font-size: 12px; font-weight: bold; }
-    h1 { margin: 12px 0 14px; font-size: 18px; }
-    .intro p { margin: 0; font-size: 13px; color: #a8caff; }
-    label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: bold; }
-    select { width: 100%; height: 41px; padding: 0 13px; border: 1px solid #3b4759; border-radius: 9px; background: #101827; color: #f1f5f9; font-size: 14px; cursor: pointer; }
+    .version-tag { display: inline-block; padding: 4px 9px; border-radius: 20px; background: #063e2a; color: #00d66a; font-size: 16px; font-weight: bold; }
+    h1 { margin: 12px 0 14px; font-size: 28px; }
+    .intro p { margin: 0; font-size: 16px; color: #a8caff; }
+    label { display: block; margin-bottom: 9px; font-size: 16px; font-weight: bold; }
+    select { width: 100%; height: 48px; padding: 0 13px; border: 1px solid #3b4759; border-radius: 9px; background: #101827; color: #f1f5f9; font-size: 16px; cursor: pointer; }
     select:focus { outline: 2px solid #00a24c; outline-offset: 1px; }
-    .download, .releases-link { display: flex; align-items: center; justify-content: center; gap: 9px; height: 41px; border-radius: 24px; text-decoration: none; font-size: 14px; font-weight: bold; }
+    .download, .releases-link { display: flex; align-items: center; justify-content: center; gap: 9px; height: 48px; border-radius: 24px; text-decoration: none; font-size: 16px; }
     .download { margin-top: 8px; background: #008d37; color: white; }
     .download:hover { background: #00a844; }
     .download svg { width: 16px; height: 16px; }
     .releases-link { margin: 9px 0 20px; border: 1px solid #3b4759; color: #d5e3f7; }
     .releases-link:hover { background: #1c2a40; color: #fff; }
+    .readme-section { padding: 26px 8px 10px; }
+    .readme-section h2 { font-size: 24px; margin: 0 0 18px; }
+    .readme-content { color: #c5d3e6; font-size: 17px; line-height: 1.75; overflow-wrap: anywhere; }
+    .readme-content h1, .readme-content h2, .readme-content h3 { color: #f8fafc; line-height: 1.35; margin: 25px 0 12px; }
+    .readme-content h1 { font-size: 28px; } .readme-content h2 { font-size: 24px; } .readme-content h3 { font-size: 16px; }
+    .readme-content p, .readme-content ul, .readme-content ol { margin: 10px 0 16px; }
+    .readme-content a { color: #8bbcff; } .readme-content img { max-width: 100%; height: auto; border-radius: 8px; }
+    .readme-content pre { padding: 14px; background: #080e19; border-radius: 8px; overflow-x: auto; }
+    .readme-content code { background: #202e43; border-radius: 4px; padding: 2px 5px; }
+    .readme-content pre code { padding: 0; background: none; }
+    .readme-content table { border-collapse: collapse; display: block; overflow-x: auto; width: 100%; }
+    .readme-content th, .readme-content td { border: 1px solid #344155; padding: 8px 12px; text-align: left; }
+    .readme-content blockquote { border-left: 3px solid #71d5b1; margin-left: 0; padding-left: 15px; }
     @media (max-width: 600px) { .container { padding: 16px 12px 20px; } .intro { padding: 28px 4px 23px; } }
   </style>
 </head>
@@ -66,7 +79,13 @@
     </a>
     <a class="releases-link" href="https://github.com/sYagoX/Atlas-Minimap/releases" target="_blank" rel="noopener noreferrer">View Releases ↗</a>
     <hr>
+    <section class="readme-section" aria-labelledby="readme-heading">
+      <h2 id="readme-heading">About Atlas Minimap</h2>
+      <div id="readme-content" class="readme-content" aria-live="polite">Loading project information...</div>
+    </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/marked@16.4.1/lib/marked.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script>
     const versionSelect = document.getElementById('version');
     const downloadLink = document.getElementById('download');
@@ -79,6 +98,33 @@
 
     versionSelect.addEventListener('change', updateDownload);
     updateDownload();
+
+    async function loadReadme() {
+      const content = document.getElementById('readme-content');
+      const repo = 'https://raw.githubusercontent.com/sYagoX/Atlas-Minimap/main/';
+
+      try {
+        const response = await fetch(repo + 'README.md');
+        if (!response.ok) throw new Error('README unavailable');
+        const markdown = await response.text();
+        if (!window.marked || !window.DOMPurify) throw new Error('Renderer unavailable');
+        const html = marked.parse(markdown);
+        content.innerHTML = DOMPurify.sanitize(html);
+
+
+
+        content.querySelectorAll('img').forEach(function (img) {
+          const source = img.getAttribute('src');
+          if (source && !/^(https?:|data:|\/\/)/i.test(source)) {
+            img.src = new URL(source, repo).href;
+          }
+        });
+      } catch (error) {
+        content.textContent = 'Project information could not be loaded. Please try again later.';
+      }
+    }
+
+    loadReadme();
   </script>
 </body>
 </html>
