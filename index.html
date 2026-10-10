@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlas Minimap - Download</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: #080e19; color: #f8fafc; font-family: Arial, Helvetica, sans-serif; }
+    .container { width: 100%; max-width: 760px; padding: 20px; background: #101827; border-radius: 17px; }
+    .header { display: flex; align-items: center; gap: 11px; margin-bottom: 20px; }
+    .logo { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 9px; background: #253650; color: #71d5b1; }
+    .logo svg { width: 20px; height: 20px; }
+    .name { font-size: 18px; font-weight: bold; }
+    .subtitle { margin-top: 6px; font-size: 12px; color: #a8caff; }
+    hr { margin: 0; border: 0; border-top: 1px solid #344155; }
+    .intro { padding: 32px 8px 24px; text-align: center; }
+    .version-tag { display: inline-block; padding: 4px 9px; border-radius: 20px; background: #063e2a; color: #00d66a; font-size: 12px; font-weight: bold; }
+    h1 { margin: 12px 0 14px; font-size: 18px; }
+    .intro p { margin: 0; font-size: 13px; color: #a8caff; }
+    label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: bold; }
+    select { width: 100%; height: 41px; padding: 0 13px; border: 1px solid #3b4759; border-radius: 9px; background: #101827; color: #f1f5f9; font-size: 14px; cursor: pointer; }
+    select:focus { outline: 2px solid #00a24c; outline-offset: 1px; }
+    .download, .releases-link { display: flex; align-items: center; justify-content: center; gap: 9px; height: 41px; border-radius: 24px; text-decoration: none; font-size: 14px; font-weight: bold; }
+    .download { margin-top: 8px; background: #008d37; color: white; }
+    .download:hover { background: #00a844; }
+    .download svg { width: 16px; height: 16px; }
+    .releases-link { margin: 9px 0 20px; border: 1px solid #3b4759; color: #d5e3f7; }
+    .releases-link:hover { background: #1c2a40; color: #fff; }
+    @media (max-width: 600px) { .container { padding: 16px 12px 20px; } .intro { padding: 28px 4px 23px; } }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14m6-12v14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="name">Atlas Minimap</div>
+        <div class="subtitle">Official downloads · Minecraft Java</div>
+      </div>
+    </header>
+    <hr>
+    <section class="intro">
+      <span class="version-tag">Version 1.0 available</span>
+      <h1>Download Atlas Minimap</h1>
+      <p>Select your Minecraft version to download the compatible mod.</p>
+    </section>
+    <label for="version">Minecraft Version</label>
+    <select id="version">
+      <option value="26.3">Minecraft 26.3</option>
+      <option value="26.2">Minecraft 26.2</option>
+      <option value="26.1.2">Minecraft 26.1.2</option>
+      <option value="26.1.1">Minecraft 26.1.1</option>
+      <option value="26.1">Minecraft 26.1</option>
+      <option value="1.21.11">Minecraft 1.21.11</option>
+    </select>
+    <a class="download" id="download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>
+      </svg>
+      Download mod (.jar)
+    </a>
+    <a class="releases-link" href="https://github.com/sYagoX/Atlas-Minimap/releases" target="_blank" rel="noopener noreferrer">View Releases ↗</a>
+    <hr>
+  </main>
+  <script>
+    const versionSelect = document.getElementById('version');
+    const downloadLink = document.getElementById('download');
+    const releaseUrl = 'https://github.com/sYagoX/Atlas-Minimap/releases/download/1.0/';
+
+    function updateDownload() {
+      const fileName = 'atlas-minimap-mc' + versionSelect.value + '-1.0.jar';
+      downloadLink.href = releaseUrl + fileName;
+    }
+
+    versionSelect.addEventListener('change', updateDownload);
+    updateDownload();
+  </script>
+</body>
+</html>
